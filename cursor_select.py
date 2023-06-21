@@ -5,14 +5,16 @@ class CursorSelect:
         self.mouse_coordinates = coordinates
         self.turn = turn_color
 
-    def determine_piece_from_coordinates(self, white_locations, black_locations):
-        if self.turn:
+    def determine_piece_from_coordinates(self, white_locations, black_locations, turn, coordinates):
+        turn = self.turn
+        coordinates = self.mouse_coordinates
+        if turn:
             for name in white_locations:
-                if self.mouse_coordinates == white_locations[name]:
+                if coordinates == white_locations[name]:
                     return name
         else:
             for name in black_locations:
-                if self.mouse_coordinates == black_locations[name]:
+                if coordinates == black_locations[name]:
                     return name
     
 
