@@ -106,8 +106,8 @@ class GameSetUp:
                     self.screen.blit(black_pawn, (self.black_pieces_locations[i][0] * SIZE + CENTER_X, self.black_pieces_locations[i][1] * SIZE + CENTER_Y))
         
     def draw_moves(self, move_list, turn):
-        white_turn = turn
-        if white_turn:
+        is_white_turn = turn
+        if is_white_turn:
             for c in move_list:
                 pygame.draw.circle(self.screen, "blue", (c[0] * 100 + 50, c[1] * 100 + 50), 5)
         else:
@@ -115,29 +115,38 @@ class GameSetUp:
                 pygame.draw.circle(self.screen, "red", (c[0] * 100 + 50, c[1] * 100 + 50), 5)
 
     def update_locations(self, piece_name, coordinates, turn):
-        white_turn = turn
-        if turn:
+        is_white_turn = turn
+        if is_white_turn:
             for w in self.white_pieces_locations:
                 if piece_name == w:
                     self.white_pieces_locations[w] = ((coordinates[0], coordinates[1]))
-                    if coordinates in self.black_pieces_locations.values():
-                        for b in self.black_pieces_locations.items():
-                            if self.black_pieces_locations[b[0]] == coordinates:
-                                del self.black_pieces_locations[b[0]]
-                                break
         else:
             for b in self.black_pieces_locations:
                 if piece_name == b:
                     self.black_pieces_locations[b] = ((coordinates[0], coordinates[1]))
-                    if coordinates in self.white_pieces_locations.values():
-                        for w in self.white_pieces_locations.items():
-                            if self.white_pieces_locations[w[0]] == coordinates:
-                                del self.white_pieces_locations[w[0]]
-                                break
+    
+    def delete_piece(self, coordinates, turn):
+        is_white_turn = turn
+        if is_white_turn:
+            if coordinates in self.black_pieces_locations.values():
+                for b in self.black_pieces_locations.items():
+                    if self.black_pieces_locations[b[0]] == coordinates:
+                        del self.black_pieces_locations[b[0]]
+                        return (b[0], b[1])
+        else:
+            if coordinates in self.white_pieces_locations.values():
+                for w in self.white_pieces_locations.items():
+                    if self.white_pieces_locations[w[0]] == coordinates:
+                        del self.white_pieces_locations[w[0]]
+                        return (w[0], w[1])
+
+
+    
+    
     
     def draw_check(self, move_list, turn):
-        white_turn = turn
-        if white_turn:
+        is_white_turn = turn
+        if is_white_turn:
             for b in move_list:
                 pygame.draw.circle(self.screen, "purple", (b[0] * 100 + 50, b[1] * 100 + 50), 5)
         else:

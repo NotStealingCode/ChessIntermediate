@@ -25,30 +25,35 @@ class PieceMoveSet:
 
     def pawn_move_set(self, name, white_locations, black_locations, moves, turn):
         moves = self.moves_list
-        white_turn = turn
+        is_white_turn = turn
         name = self.name
-        if white_turn:
+        if is_white_turn:
             allies = white_locations
             enemies = black_locations
             location = white_locations[name]
 
+            
             if location[1] == 1:
                 moves.append((location[0], location[1] + 1))
                 moves.append((location[0], location[1] + 2))
-                for b in enemies:
-                    if enemies[b] in moves:
-                        moves.remove(enemies[b])
+
             else:
                 moves.append((location[0], location[1] + 1))
+
+            if moves[0] in allies.values() or moves[0] in enemies.values():
+                moves = []
+            else:
+                for w in allies:
+                    if allies[w] in moves:
+                        moves.remove(allies[w])
+                
                 for b in enemies:
                     if enemies[b] in moves:
                         moves.remove(enemies[b])
+
             for b in enemies:
                 if (location[0] + 1, location[1] + 1) == enemies[b] or (location[0] - 1, location[1] + 1) == enemies[b]:
                     moves.append(enemies[b])
-            for w in allies:
-                if allies[w] in moves:
-                    moves = []
 
         else:
             allies = black_locations
@@ -57,40 +62,46 @@ class PieceMoveSet:
             if location[1] == 6:
                 moves.append((location[0], location[1] - 1))
                 moves.append((location[0], location[1] - 2))
-                for b in enemies:
-                    if enemies[b] in moves:
-                        moves.remove(enemies[b])
+
             else:
                 moves.append((location[0], location[1] - 1))
+
+            if moves[0] in allies.values() or moves[0] in enemies.values():
+                moves = []
+
+            else:
+                for w in allies:
+                    if allies[w] in moves:
+                        moves.remove(allies[w])
+                
                 for b in enemies:
                     if enemies[b] in moves:
                         moves.remove(enemies[b])
+            
             for b in enemies:
                 if (location[0] - 1, location[1] - 1) == enemies[b] or (location[0] + 1, location[1] - 1) == enemies[b]:
                     moves.append(enemies[b])
-            for w in allies:
-                if allies[w] in moves:
-                    moves = []
+
         return moves
 
 
     def rook_move_set(self, name, white_locations, black_locations, moves, turn):
         moves = self.moves_list
-        white_turn = turn
+        is_white_turn = turn
         name = self.name
         moves1 = []
         moves2 = []
         moves3 = []
         moves4 = []
 
-        if white_turn:
+        if is_white_turn:
             allies = white_locations
             enemies = black_locations
             location = white_locations[name]
         
             for i in range(0, location[0]):
                 moves1.append((location[0] - i - 1, location[1]))
-                current_index = moves1.index((location[0] - 1, location[1]))
+                current_index = moves1.index((location[0] - i - 1, location[1]))
                 if moves1[current_index] in enemies.values():
                     break
 
@@ -150,7 +161,7 @@ class PieceMoveSet:
 
             for i in range(0, location[0]):
                 moves1.append((location[0] - i - 1, location[1]))
-                current_index = moves1.index((location[0] - 1, location[1]))
+                current_index = moves1.index((location[0] - i- 1, location[1]))
                 if moves1[current_index] in enemies.values():
                     break
 
@@ -206,7 +217,7 @@ class PieceMoveSet:
 
     def bishop_move_set(self, name, white_locations, black_locations, moves, turn):
         moves = self.moves_list
-        white_turn = turn
+        is_white_turn = turn
         name = self.name
         moves1 = []
         moves2 = []
@@ -215,7 +226,7 @@ class PieceMoveSet:
 
 
 
-        if white_turn:
+        if is_white_turn:
             allies = white_locations
             enemies = black_locations
             location = white_locations[name]
@@ -284,10 +295,10 @@ class PieceMoveSet:
 
     def knight_move_set(self, name, white_locations, black_locations, moves, turn):        
         moves = self.moves_list
-        white_turn = turn
+        is_white_turn = turn
         name = self.name
         moves1 = []
-        if white_turn:
+        if is_white_turn:
             allies = white_locations
             enemies = black_locations
             location = white_locations[name]
@@ -314,10 +325,10 @@ class PieceMoveSet:
 
     def king_move_set(self, name, white_locations, black_locations, moves, turn):
         moves = self.moves_list
-        white_turn = turn
+        is_white_turn = turn
         name = self.name
         moves1 = []
-        if white_turn:
+        if is_white_turn:
             allies = white_locations
             enemies = black_locations
             location = white_locations[name]
@@ -340,18 +351,16 @@ class PieceMoveSet:
 
         moves2 = []
         for n in moves1:
-            print("done")
             if n not in allies.values():
                 moves2.append(n)
 
         moves = [(value, key) for (value, key) in moves2 if key >= 0 and key <= 7 and value >= 0 and value <= 7]
-        print(allies.values())
         return moves
         
     def queen_move_set(self, name, white_locations, black_locations, moves, turn):
-        white_turn = turn
-        moves1 = self.bishop_move_set(name, white_locations, black_locations, moves, turn)
-        moves2 = self.rook_move_set(name, white_locations, black_locations, moves, turn)
+        is_white_turn = turn
+        moves1 = self.bishop_move_set(name, white_locations, black_locations, moves, is_white_turn)
+        moves2 = self.rook_move_set(name, white_locations, black_locations, moves, is_white_turn)
         moves3 = moves1 + moves2
         return moves3
     
